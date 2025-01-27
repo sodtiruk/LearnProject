@@ -49,7 +49,7 @@ namespace LearnProject.Controllers
 
         [HttpPost("login")]
         [SwaggerOperation(Summary = "Login user", Description = "Login a user with a username and password.")]
-        public async Task<ActionResult<BaseResponse<LoginResponse>>> Login(LoginRequest loginRequest)
+        public async Task<ActionResult<BaseResponse<LoginResponse>>> Login([FromBody] LoginRequest loginRequest)
         {
             try
             {
