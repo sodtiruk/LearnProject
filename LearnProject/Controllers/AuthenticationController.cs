@@ -5,6 +5,7 @@ using LearnProject.DTOs.request;
 using LearnProject.DTOs.response;
 using LearnProject.Services;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace LearnProject.Controllers
 {
@@ -20,7 +21,8 @@ namespace LearnProject.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<BaseResponse<RegisteredResponse>>> Register(RegisterRequest registerRequest)
+        [SwaggerOperation(Summary = "Register a new user", Description = "Registers a new user with a username and password.")]
+        public async Task<ActionResult<BaseResponse<RegisteredResponse>>> Register([FromBody] RegisterRequest registerRequest)
         {
             try
             {
@@ -46,6 +48,7 @@ namespace LearnProject.Controllers
         }
 
         [HttpPost("login")]
+        [SwaggerOperation(Summary = "Login user", Description = "Login a user with a username and password.")]
         public async Task<ActionResult<BaseResponse<LoginResponse>>> Login(LoginRequest loginRequest)
         {
             try

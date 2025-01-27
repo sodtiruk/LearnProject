@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace LearnProject.DTOs.request
 {
@@ -10,5 +11,17 @@ namespace LearnProject.DTOs.request
 
         [Required(ErrorMessage = "The password field is required.")]
         public required string Password { get; set; }
+    }
+
+    public class LoginRequestExample : IExamplesProvider<LoginRequest>
+    {
+        public LoginRequest GetExamples()
+        {
+            return new LoginRequest
+            {
+                Username = "admin",
+                Password = "1234"
+            };
+        }
     }
 }

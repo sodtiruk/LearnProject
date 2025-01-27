@@ -1,4 +1,5 @@
 using LearnProject.Data;
+using LearnProject.Extensions;
 using LearnProject.Repositories;
 using LearnProject.Repositories.impl;
 using LearnProject.Services;
@@ -32,7 +33,8 @@ namespace LearnProject
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerService();
 
             var app = builder.Build();
 

@@ -68,14 +68,8 @@ namespace LearnProject.Services
         {
             ValidateLoginRequest(loginRequest);
 
-            UserModel? userModel = await _authenticationReponsitory.GetUserByUsername(loginRequest);
-            
-            if (userModel == null)
-            {
-                throw new KeyNotFoundException("User not found");
-            }
-
-            if (!isPasswordCorrect(loginRequest, userModel))
+            UserModel? userModel = await _authenticationReponsitory.GetUserByUsername(loginRequest) ?? throw new KeyNotFoundException("User not found");
+            if (!IsPasswordCorrect(loginRequest, userModel))
             {
                 throw new UnauthorizedAccessException("Password is incorrect");
             }
@@ -87,7 +81,7 @@ namespace LearnProject.Services
 
         }
 
-        private static bool isPasswordCorrect(LoginRequest loginRequest, UserModel userModel)
+        private static bool IsPasswordCorrect(LoginRequest loginRequest, UserModel userModel)
         {
             return BCrypt.Net.BCrypt.Verify(loginRequest.Password, userModel.Password);
         }
