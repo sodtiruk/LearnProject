@@ -35,11 +35,11 @@ namespace LearnProject.Controllers
             }
             catch (ArgumentNullException ex)
             {
-                return NotFound(new { message = ex.Message, StatusCode = HttpStatusCode.NotFound });
+                return BadRequest(new { message = ex.Message, StatusCode = HttpStatusCode.BadRequest });
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message, StatusCode = HttpStatusCode.NotFound });
+                return BadRequest(new { message = ex.Message, StatusCode = HttpStatusCode.BadRequest });
             }
             catch (Exception ex)
             {
@@ -62,11 +62,11 @@ namespace LearnProject.Controllers
             }
             catch (ArgumentNullException ex)
             {
-                return NotFound(new { message = ex.Message, StatusCode = HttpStatusCode.NotFound });
+                return BadRequest(new { message = ex.Message, StatusCode = HttpStatusCode.BadRequest });
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message, StatusCode = HttpStatusCode.NotFound });
+                return BadRequest(new { message = ex.Message, StatusCode = HttpStatusCode.BadRequest });
             }
             catch (Exception ex)
             {
