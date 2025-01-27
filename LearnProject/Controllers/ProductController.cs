@@ -3,6 +3,7 @@ using LearnProject.Dtos.request;
 using LearnProject.Dtos.response;
 using LearnProject.Models;
 using LearnProject.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LearnProject.Controllers
@@ -21,6 +22,7 @@ namespace LearnProject.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<BaseResponse<IEnumerable<ProductModel>>>> GetAllProducts()
         {
             BaseResponse<IEnumerable<ProductModel>> response = new()
