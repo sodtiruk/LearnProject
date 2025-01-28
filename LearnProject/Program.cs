@@ -18,7 +18,7 @@ namespace LearnProject
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDbContext<ECommerceDbContext>(options =>
+            builder.Services.AddDbContext<AppDbContext>(options =>
             {
                 var connectionString = builder.Configuration.GetConnectionString("ticketdb");
                 var serverVersion = ServerVersion.AutoDetect(connectionString);

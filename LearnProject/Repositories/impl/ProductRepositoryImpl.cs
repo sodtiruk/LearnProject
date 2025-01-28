@@ -8,9 +8,9 @@ namespace LearnProject.Repositories.impl
     public class ProductRepositoryImpl : IProductRepository
     {
 
-        private readonly ECommerceDbContext _context;
+        private readonly AppDbContext _context;
 
-        public ProductRepositoryImpl(ECommerceDbContext context)
+        public ProductRepositoryImpl(AppDbContext context)
         {
             _context = context;
         }

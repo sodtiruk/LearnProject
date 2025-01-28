@@ -9,9 +9,9 @@ namespace LearnProject.Repositories.impl
     public class AuthenticationRepositoryImpl : IAuthenticationRepository
     {
 
-        private readonly ECommerceDbContext dbContext;
+        private readonly AppDbContext dbContext;
 
-        public AuthenticationRepositoryImpl(ECommerceDbContext dbContext)
+        public AuthenticationRepositoryImpl(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
