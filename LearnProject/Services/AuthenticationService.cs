@@ -25,7 +25,7 @@ namespace LearnProject.Services
             UserModel? user = await _authenticationReponsitory.GetUserByUsername(registerRequest);
             if (user != null)
             {
-                throw new KeyNotFoundException("User already exists");
+                throw new KeyNotFoundException("Email already exists");
             }
 
             registerRequest.Password = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password);
@@ -35,16 +35,16 @@ namespace LearnProject.Services
             return new RegisteredResponse
             {
                 Id = userModel.Id,
-                Username = userModel.Username,
+                Username = userModel.Email,
             };
 
         }
 
         private static void ValidateRegisterRequest(RegisterRequest registerRequest)
         {
-            if (registerRequest.Username == null)
+            if (registerRequest.Email == null)
             {
-                throw new ArgumentNullException(nameof(registerRequest), "Username is null");
+                throw new ArgumentNullException(nameof(registerRequest), "Email is null");
             }
 
             if (registerRequest.Password == null)
@@ -57,7 +57,7 @@ namespace LearnProject.Services
         {
             var newUser = new UserModel
             {
-                Username = registerRequest.Username,
+                Email = registerRequest.Email,
                 Password = registerRequest.Password 
             };
 
@@ -89,9 +89,9 @@ namespace LearnProject.Services
         private static void ValidateLoginRequest(LoginRequest loginRequest)
         {
 
-            if (loginRequest.Username == null)
+            if (loginRequest.Email == null)
             {
-                throw new ArgumentNullException(nameof(loginRequest), "Username is null");
+                throw new ArgumentNullException(nameof(loginRequest), "Email is null");
             }
 
             if (loginRequest.Password == null)

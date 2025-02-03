@@ -18,11 +18,11 @@ namespace LearnProject.Repositories.impl
 
         public async Task<UserModel?> GetUserByUsername(RegisterRequest registerRequest)
         {
-            return await dbContext.Users.FirstOrDefaultAsync(user => user.Username == registerRequest.Username);
+            return await dbContext.Users.FirstOrDefaultAsync(user => user.Email == registerRequest.Email);
         }
         public async Task<UserModel?> GetUserByUsername(LoginRequest loginRequest)
         {
-            return await dbContext.Users.FirstOrDefaultAsync(user => user.Username == loginRequest.Username);
+            return await dbContext.Users.FirstOrDefaultAsync(user => user.Email == loginRequest.Email);
         }
 
         public async Task<UserModel> AddUser(UserModel newUser)

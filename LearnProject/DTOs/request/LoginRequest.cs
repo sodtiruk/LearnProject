@@ -7,7 +7,7 @@ namespace LearnProject.DTOs.request
     {
 
         [Required(ErrorMessage = "The username field is required.")]
-        public required string Username { get; set; }
+        public required string Email { get; set; }
 
         [Required(ErrorMessage = "The password field is required.")]
         public required string Password { get; set; }
@@ -19,7 +19,7 @@ namespace LearnProject.DTOs.request
         {
             return new LoginRequest
             {
-                Username = "admin",
+                Email = "admin",
                 Password = "1234"
             };
         }
