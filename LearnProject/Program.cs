@@ -1,5 +1,6 @@
 using System.Text;
 using LearnProject.Data;
+using LearnProject.Dtos.response;
 using LearnProject.Extensions;
 using LearnProject.Repositories;
 using LearnProject.Repositories.impl;
@@ -53,6 +54,29 @@ namespace LearnProject
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
                         ClockSkew = TimeSpan.Zero // ลดเวลาให้ตรวจสอบแบบเข้มงวด
                     };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnChallenge = async context =>
+                        {
+                            if (!context.Response.HasStarted)
+                            {
+                                context.HandleResponse(); // หยุดการส่ง Response เองของระบบ
+
+                                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                                context.Response.ContentType = "application/json";
+
+                                var response = new BaseResponse<object>
+                                {
+                                    Message = "Authorization token is missing or invalid",
+                                    Data = null,
+                                    StatusCode = StatusCodes.Status401Unauthorized
+                                };
+
+                                await context.Response.WriteAsJsonAsync(response);
+                            }
+                        }
+                    };    
                 });
 
 
@@ -61,6 +85,8 @@ namespace LearnProject
             builder.Services.AddEndpointsApiExplorer();
 
             builder.Services.AddSwaggerService();
+            builder.Services.AddHealthChecks();
+
 
             var app = builder.Build();
 
@@ -78,6 +104,8 @@ namespace LearnProject
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.MapHealthChecks("/health");
 
             app.Run();
         }

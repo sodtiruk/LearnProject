@@ -65,7 +65,15 @@ namespace LearnProject.Utils
                 var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
                 return principal;
             }
-            catch
+            catch (SecurityTokenExpiredException)
+            {
+                return null;
+            }
+            catch (SecurityTokenException)
+            {
+                return null;
+            }
+            catch (Exception)
             {
                 return null; // Token ไม่ถูกต้อง
             }
