@@ -28,7 +28,7 @@ namespace LearnProject.Services
                 throw new KeyNotFoundException("Email already exists");
             }
 
-            registerRequest.Password = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password);
+            registerRequest.Password = HashPassword(registerRequest.Password);
 
             UserModel userModel = await SaveUserToDatabase(registerRequest);
 
@@ -39,7 +39,7 @@ namespace LearnProject.Services
             };
 
         }
-
+        
         private static void ValidateRegisterRequest(RegisterRequest registerRequest)
         {
             if (registerRequest.Email == null)
@@ -51,6 +51,11 @@ namespace LearnProject.Services
             {
                 throw new ArgumentNullException(nameof(registerRequest), "Password is null");
             }
+        }
+
+        public static string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
         private async Task<UserModel> SaveUserToDatabase(RegisterRequest registerRequest)
