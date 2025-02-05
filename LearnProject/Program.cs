@@ -1,6 +1,5 @@
 using System.Text;
 using LearnProject.Data;
-using LearnProject.Dtos.response;
 using LearnProject.Extensions;
 using LearnProject.Repositories;
 using LearnProject.Repositories.impl;
@@ -9,6 +8,7 @@ using LearnProject.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace LearnProject
 {
@@ -57,28 +57,43 @@ namespace LearnProject
 
                     options.Events = new JwtBearerEvents
                     {
+                        OnAuthenticationFailed = async context =>
+                        {
+                            if (!context.Response.HasStarted)
+                            {
+                                // ตรวจสอบว่า Token หมดอายุหรือไม่
+                                var errorResponse = context.Exception.GetType() == typeof(SecurityTokenExpiredException)
+                                    ? new { error = "Token expired", message = context.Exception.Message }
+                                    : new { error = "Invalid token", message = context.Exception.Message };
+
+                                context.Response.StatusCode = 401;
+                                context.Response.ContentType = "application/json";
+                                await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
+                            }
+
+                            // ยกเลิกการประมวลผลเพิ่มเติม
+                            context.NoResult();
+                        },
                         OnChallenge = async context =>
                         {
                             if (!context.Response.HasStarted)
                             {
-                                context.HandleResponse(); // หยุดการส่ง Response เองของระบบ
+                                context.HandleResponse(); // หยุดการตอบสนองอัตโนมัติ
 
-                                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                                context.Response.StatusCode = 401;
                                 context.Response.ContentType = "application/json";
 
-                                var response = new BaseResponse<object>
+                                var errorResponse = new
                                 {
-                                    Message = "Authorization token is missing or invalid",
-                                    Data = null,
-                                    StatusCode = StatusCodes.Status401Unauthorized
+                                    error = "Unauthorized",
+                                    message = "Authorization token is missing or invalid"
                                 };
 
-                                await context.Response.WriteAsJsonAsync(response);
+                                await context.Response.WriteAsync(JsonConvert.SerializeObject(errorResponse));
                             }
                         }
-                    };    
+                    };
                 });
-
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -86,6 +101,18 @@ namespace LearnProject
 
             builder.Services.AddSwaggerService();
             builder.Services.AddHealthChecks();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:5173") // ต้นทางที่อนุญาต
+                              .AllowAnyMethod()
+                              .AllowAnyHeader()
+                              .AllowCredentials();
+                    });
+            });
 
 
             var app = builder.Build();
@@ -97,10 +124,11 @@ namespace LearnProject
                 app.UseSwaggerUI();
             }
 
+            app.UseCors("AllowSpecificOrigin");
+
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
-
             app.UseAuthorization();
 
             app.MapControllers();
